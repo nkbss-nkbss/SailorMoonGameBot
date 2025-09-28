@@ -14,6 +14,7 @@ import asyncio
 import random
 from dataclasses import dataclass, asdict
 from datetime import datetime, timedelta
+import requests
 
 from telegram import (
     Update,
@@ -819,6 +820,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
