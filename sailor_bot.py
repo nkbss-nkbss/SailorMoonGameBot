@@ -39,7 +39,7 @@ if not BOT_TOKEN:
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 PORT = int(os.getenv("PORT", 10000))
 
-DB_PATH = "/tmp/sailor.db"  # временный путь на контейнере
+DB_PATH = "/data/sailor.db"  # временный путь на контейнере
 GITHUB_DB_URL = "https://raw.githubusercontent.com/nkbss-nkbss/SailorMoonGameBot/main/sailor.db"
 
 if not os.path.exists(DB_PATH):
@@ -820,6 +820,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
