@@ -8,6 +8,7 @@
 from dotenv import load_dotenv
 load_dotenv()  # Это загрузит переменные окружения из файла .env
 import os
+import shutil
 import sqlite3
 import asyncio
 import random
@@ -37,14 +38,7 @@ if not BOT_TOKEN:
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 PORT = int(os.getenv("PORT", 10000))
 
-DB_PATH = "/tmp/sailor.db"  # временный путь на контейнере
-GITHUB_DB_URL = "https://raw.githubusercontent.com/nkbss-nkbss/SailorMoonGameBot/main/sailor.db"
-
-if not os.path.exists(DB_PATH):
-    # вариант 1: скачиваем напрямую из GitHub
-    r = requests.get(GITHUB_DB_URL)
-    with open(DB_PATH, "wb") as f:
-        f.write(r.content)
+DB_PATH = shutil.copy("sailor.db", "/tmp/sailor.db")
 
 STYLES = {
     "luna": {"name": "Сейлор Мун 🌙", "hp_base": 30, "atk_base": 3, "img": "https://i.pinimg.com/1200x/6a/02/19/6a0219632e0cf643b21a15f134ba79c4.jpg" },
@@ -816,6 +810,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
