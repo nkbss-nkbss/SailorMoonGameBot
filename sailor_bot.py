@@ -37,7 +37,7 @@ if not BOT_TOKEN:
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 PORT = int(os.getenv("PORT", 10000))
 
-DB_PATH = "sailor.db"
+DB_PATH = "/data/sailor.db"
 
 STYLES = {
     "luna": {"name": "Сейлор Мун 🌙", "hp_base": 30, "atk_base": 3, "img": "https://i.pinimg.com/1200x/6a/02/19/6a0219632e0cf643b21a15f134ba79c4.jpg" },
@@ -279,15 +279,13 @@ def make_user_buttons(user_id: int):
     return kb
 
 def check_and_restore_energy(player):
-    """Восстанавливает энергию на каждый прошедший час и возвращает оставшееся до следующей единицы."""
-    now = datetime.utcnow()
-    
+    now = datetime.now(timezone.utc)
+
     if not player.last_energy_tick:
-        # если ещё ни разу не было восстановления — ставим прошлый час
         last_tick = now - timedelta(hours=1)
     else:
         last_tick = datetime.fromisoformat(player.last_energy_tick)
-    
+
     hours_passed = int((now - last_tick).total_seconds() // 3600)
     
     if hours_passed > 0:
@@ -295,13 +293,13 @@ def check_and_restore_energy(player):
         player.last_energy_tick = (last_tick + timedelta(hours=hours_passed)).isoformat()
         save_player(player)
     
-    # Время до следующей единицы энергии
     next_tick = last_tick + timedelta(hours=hours_passed + 1)
     seconds_left = (next_tick - now).total_seconds()
     minutes = int(seconds_left // 60)
     seconds = int(seconds_left % 60)
     
     return minutes, seconds
+
     
 # ------------ Команды бота ------------
 async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -811,4 +809,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
