@@ -281,7 +281,13 @@ def make_user_buttons(user_id: int):
 def check_and_restore_energy(player):
     """Восстанавливает энергию на каждый прошедший час и возвращает оставшееся до следующей единицы."""
     now = datetime.utcnow()
-    last_tick = datetime.fromisoformat(player.last_energy_tick) if player.last_energy_tick else now
+    
+    if not player.last_energy_tick:
+        # если ещё ни разу не было восстановления — ставим прошлый час
+        last_tick = now - timedelta(hours=1)
+    else:
+        last_tick = datetime.fromisoformat(player.last_energy_tick)
+    
     hours_passed = int((now - last_tick).total_seconds() // 3600)
     
     if hours_passed > 0:
@@ -294,8 +300,9 @@ def check_and_restore_energy(player):
     seconds_left = (next_tick - now).total_seconds()
     minutes = int(seconds_left // 60)
     seconds = int(seconds_left % 60)
+    
     return minutes, seconds
-
+    
 # ------------ Команды бота ------------
 async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
@@ -804,3 +811,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
